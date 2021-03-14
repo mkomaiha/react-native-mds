@@ -75,7 +75,7 @@ function MDSImpl() {
 	}
 
 	this.handleNewScannedDevice = function(e: Event) {
-		self.onNewScannedDevice(e.name, e.address);
+		self.onNewScannedDevice(e.name, e.address, e.serial);
 	}
 
 	this.handleNewNotification = function(e: Event) {

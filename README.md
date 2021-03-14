@@ -97,7 +97,7 @@ However, the correct answer may depend on XCode version.
 import MDS from 'react-native-mds';
 
 // Scan for bluetooth devices
-MDS.scan((name, address) => {this.scanHandler(name, address);})
+MDS.scan((name, address, serial) => {this.scanHandler(name, address, serial);})
 
 // Stop scanning
 MDS.stopScan();

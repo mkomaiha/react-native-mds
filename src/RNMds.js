@@ -1,4 +1,3 @@
-
 import { NativeModules } from 'react-native';
 
-module.exports = NativeModules.ReactMds;
+export default NativeModules.ReactMds;
