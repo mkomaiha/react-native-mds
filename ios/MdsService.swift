@@ -15,6 +15,12 @@ final public class MdsService: NSObject {
         self.bleController = BleController()
     }
 
+    public func getDevice(_ serial : String) -> [String : Any] {
+        let device = devices[serial]
+        let deviceSend = ["name": device?.localName, "address": device?.uuid.uuidString, "serial": device?.serial] as [String : Any]
+        return deviceSend // gets the device with serial - serial
+    }
+
     deinit {
         self.shutdown()
     }

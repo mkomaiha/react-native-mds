@@ -1,5 +1,4 @@
 import { DeviceEventEmitter, NativeEventEmitter, Platform } from 'react-native';
-
 import ReactMds from './RNMds'
 
 const URI_PREFIX = "suunto://"
@@ -58,13 +57,13 @@ function MDSImpl() {
 		if (this.mdsEmitter) {
 			return;
 		}
-
 		if (Platform.OS === 'android'){
 			DeviceEventEmitter.addListener('newScannedDevice', this.handleNewScannedDevice);
 			DeviceEventEmitter.addListener('newNotification', this.handleNewNotification);
 			DeviceEventEmitter.addListener('newNotificationError', this.handleNewNotificationError);
 			this.mdsEmitter = true;
 		} else {
+			// else if (ReactMds) {
 			const mdsEmitter = new NativeEventEmitter(ReactMds);
 
 			scanSubscription = mdsEmitter.addListener('newScannedDevice', this.handleNewScannedDevice);
@@ -103,6 +102,10 @@ function MDSImpl() {
 			subscribedToConnectedDevices = true;
 			self.subscribeToConnectedDevices();
 		}
+	}
+
+	this.getDevice = function(serial) {
+		return ReactMds.getDevice(serial);
 	}
 
 	this.connect = function(address) {

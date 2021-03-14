@@ -10,6 +10,7 @@
 
 @interface RCT_EXTERN_MODULE(ReactMds, NSObject)
 
+RCT_EXTERN_METHOD(getDevice:(NSString *)serial)
 RCT_EXTERN_METHOD(scan)
 RCT_EXTERN_METHOD(stopScan)
 RCT_EXTERN_METHOD(connect:(NSString *)address)

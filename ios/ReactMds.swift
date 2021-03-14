@@ -26,6 +26,11 @@ public final class ReactMds: RCTEventEmitter {
         return allEventNames
     }
 
+    @objc(getDevice:)
+    func getDevice(serial: String) -> [String : Any] {
+        return self.mds.getDevice(serial)
+    }
+
     @objc(scan)
     func scan() {
         self.mds.startScan({device in self.handleScannedDevice(device: device)}, {})
@@ -116,6 +121,7 @@ public final class ReactMds: RCTEventEmitter {
     }
 
     private func handleScannedDevice(device: MovesenseDevice) {
+        print(device)
         let deviceSend = ["name": device.localName, "address": device.uuid.uuidString, "serial": device.serial] as [String : Any]
         self.sendEvent( withName: "newScannedDevice", body: deviceSend )
     }
