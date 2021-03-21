@@ -34,10 +34,10 @@ function MDSImpl() {
 				if (data.hasOwnProperty("Body")) {
 					if(data["Body"].hasOwnProperty("DeviceInfo")) {
 						if (data["Body"]["DeviceInfo"].hasOwnProperty("Serial")) {
-							self.onDeviceConnected(data["Body"]["DeviceInfo"]["Serial"])
+							self.onDeviceConnected(data["Body"]["DeviceInfo"]["Serial"], data.Body.DeviceInfo?.Description, data.Body?.Connection?.UUID)
 						}
 					} else if(data["Body"].hasOwnProperty("Serial")){
-						self.onDeviceConnected(data["Body"]["Serial"])
+						self.onDeviceConnected(data["Body"]["Serial"], data?.Description, data.Body?.Connection?.UUID) // .Connection.UUID?
 				}
 			}
 		} else if (data["Method"] == "DEL") {
