@@ -29,14 +29,14 @@ function MDSImpl() {
 		connectedDevicesSubscription = self.subscribe("", "MDS/ConnectedDevices",
     {}, (notification) => {
 			var data = JSON.parse(notification);
-      if (data["Method"] == "POST") {
+			if (data["Method"] == "POST") {
 				if (data.hasOwnProperty("Body")) {
 					if(data["Body"].hasOwnProperty("DeviceInfo")) {
 						if (data["Body"]["DeviceInfo"].hasOwnProperty("Serial")) {
-							self.onDeviceConnected(data["Body"]["DeviceInfo"]["Serial"])
+							self.onDeviceConnected(data["Body"]["DeviceInfo"]["Serial"], data.Body.DeviceInfo?.Description, data.Body?.Connection?.UUID)
 						}
 					} else if(data["Body"].hasOwnProperty("Serial")){
-						self.onDeviceConnected(data["Body"]["Serial"])
+						self.onDeviceConnected(data["Body"]["Serial"], data?.Description, data.Body?.Connection?.UUID) // .Connection.UUID?
 				}
 			}
 		} else if (data["Method"] == "DEL") {
@@ -74,7 +74,7 @@ function MDSImpl() {
 	}
 
 	this.handleNewScannedDevice = function(e: Event) {
-		self.onNewScannedDevice(e.name, e.address, e.serial);
+		self.onNewScannedDevice(e.name, e.address);
 	}
 
 	this.handleNewNotification = function(e: Event) {

@@ -8,27 +8,21 @@ final public class MdsService: NSObject {
     private var subscriptions = Dictionary<String, Bool>()
     private var devices = Dictionary<String, MovesenseDevice>()
     private var bleController : BleController!
-    
+
     public override init() {
         super.init()
         self.mds = MDSWrapper()
         self.bleController = BleController()
     }
 
-    public func getDevice(_ serial : String) -> [String : Any] {
-        let device = devices[serial]
-        let deviceSend = ["name": device?.localName, "address": device?.uuid.uuidString, "serial": device?.serial] as [String : Any]
-        return deviceSend // gets the device with serial - serial
-    }
-
     deinit {
         self.shutdown()
     }
-    
+
     public func shutdown() {
         self.mds!.deactivate();
     }
-    
+
     /// Start looking for Movesense devices
     public func startScan(_ deviceFound : @escaping (MovesenseDevice) -> (),
                           _ scanCompleted: @escaping () -> ()) {
@@ -39,31 +33,31 @@ final public class MdsService: NSObject {
                 scanCompleted()
             });
     }
-    
+
     /// Stop looking for Movesense devices
     public func stopScan() {
         self.bleController.stopScan()
     }
-    
+
     /// Establish a connection to the specific Movesense device
     public func connectDevice(_ address : String) {
         let uuid = UUID.init(uuidString: address)
         self.bleController.stopScan();
         self.mds.connectPeripheral(with: uuid!);
     }
-    
+
     /// Disconnect specific Movesense device
     public func disconnectDevice(_ address : String) {
         let uuid = UUID.init(uuidString: address)
         self.mds.disconnectPeripheral(with: uuid!);
     }
-    
+
     /// Subscribe to a specified resource
     public func subscribe(_ uri: String,
                           parameters: Dictionary<String, Any>,
                           onNotify : @escaping (String) -> (),
                           onError : @escaping (String, String) -> ()) {
-        
+
         self.mds!.doSubscribe(uri,
                               contract: parameters,
                               response: { (response) in
@@ -78,13 +72,13 @@ final public class MdsService: NSObject {
                                 onNotify(self.convertEvent(event))
         })
     }
-    
+
     /// Unsubscribe from a specified resource. Must have been subscribed before.
     public func unsubscribe(_ uri: String) {
         self.mds!.doUnsubscribe(uri)
         self.subscriptions.removeValue(forKey: uri)
     }
-    
+
     public func put(_ uri : String,
                     _ parameters: Dictionary<String, Any>,
                     _ completionCb: @escaping (String) -> (),
@@ -100,12 +94,12 @@ final public class MdsService: NSObject {
                                 }
             });
     }
-    
+
     public func get(_ uri : String,
                     _ parameters: Dictionary<String, Any>,
                     _ completionCb: @escaping (String) -> (),
                     _ errorCb: @escaping (String) -> ())  {
-        
+
         self.mds!.doGet(uri,
                         contract: parameters,
                         completion: { (response) in
@@ -116,12 +110,12 @@ final public class MdsService: NSObject {
                             }
         });
     }
-    
+
     public func post(_ uri : String,
                     _ parameters: Dictionary<String, Any>,
                     _ completionCb: @escaping (String) -> (),
                     _ errorCb: @escaping (String) -> ())  {
-        
+
         self.mds!.doPost(uri,
                         contract: parameters,
                         completion: { (response) in
@@ -132,12 +126,12 @@ final public class MdsService: NSObject {
                             }
         });
     }
-    
+
     public func del(_ uri : String,
                     _ parameters: Dictionary<String, Any>,
                     _ completionCb: @escaping (String) -> (),
                     _ errorCb: @escaping (String) -> ())  {
-        
+
         self.mds!.doDelete(uri,
                         contract: parameters,
                         completion: { (response) in
@@ -148,23 +142,23 @@ final public class MdsService: NSObject {
                             }
         });
     }
-    
-    
+
+
     private func convertResponse(_ response : MDSResponse) -> String {
         do {
             if let json = try JSONSerialization.jsonObject(with: response.bodyData) as? [String: Any] {
                     let jsonData = try! JSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
                     let jsonString = String(data: jsonData, encoding: .utf8)
                     return jsonString!
-                
+
             }
         } catch {
             return ""
         }
-        
+
         return ""
     }
-    
+
     private func convertEvent(_ event : MDSEvent) -> String {
         do {
             if let json = try JSONSerialization.jsonObject(with: event.bodyData) as? [String: Any] {
@@ -175,7 +169,7 @@ final public class MdsService: NSObject {
         } catch {
             return ""
         }
-        
+
         return ""
     }
 }
@@ -196,7 +190,7 @@ public struct MovesenseDevice {
     public var bleStatus : Bool
     public var mdsConnected : Bool = false
     public var deviceInfo: MovesenseDeviceInfo?
-    
+
     init(uuid: UUID, localName: String, serial: String,
          info: MovesenseDeviceInfo?, linkStatus: Bool)
     {

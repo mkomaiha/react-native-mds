@@ -1,6 +1,6 @@
 {
   "name": "react-native-mds",
-  "version": "1.1.1",
+  "version": "1.1.3",
   "description": "React Native Movesense (MDS) library",
   "main": "index.js",
   "scripts": {
